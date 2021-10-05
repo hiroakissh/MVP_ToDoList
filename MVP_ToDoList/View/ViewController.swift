@@ -23,13 +23,21 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.dataSource = self
-        //tableView.delegate = self
+        tableView.delegate = self
         
         //newItemTextField.delegate = self
         
         presenter.viewDidLoad()
         
     }
+
+    @IBAction func tappedAddButton(_ sender: Any) {
+        if !newItemTextField.text!.isEmpty {
+            presenter.addNewItem(itemContent: newItemTextField.text!)
+            newItemTextField.text = ""
+        }
+    }
+    
 }
 
 extension ViewController: TestPresenterOutput{
@@ -50,6 +58,20 @@ extension ViewController: UITableViewDataSource{
         
         return cell
     }
+}
+
+extension ViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete{
+            presenter.didEditingDelete(at: indexPath)
+        }
+    }
+    
 }
 
 

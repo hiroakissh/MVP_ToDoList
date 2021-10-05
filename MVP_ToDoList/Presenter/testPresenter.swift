@@ -10,6 +10,8 @@ import Foundation
 protocol TestPresenterInput{
     var numberOfItems: Int{get}
     func item(forRow row: Int) -> String?
+    func addNewItem(itemContent: String)
+    func didEditingDelete(at indexPath: IndexPath)
     func viewDidLoad()
 }
 
@@ -18,6 +20,7 @@ protocol TestPresenterOutput: AnyObject{
 }
 
 final class TestPresenter: TestPresenterInput{
+
 
     
     private(set) var items: [String] = []
@@ -40,6 +43,21 @@ final class TestPresenter: TestPresenterInput{
         }
         return items[row]
     }
+    
+    func addNewItem(itemContent: String) {
+        model.addItem(itemContent: itemContent){
+            items = model.fetchItems()
+            view.updateItems()
+        }
+    }
+    
+    func didEditingDelete(at indexPath: IndexPath) {
+        model.deleteItem(at: indexPath.row){
+            items = model.fetchItems()
+            view.updateItems()
+        }
+    }
+    
     
     func viewDidLoad(){
         items = model.fetchItems()
